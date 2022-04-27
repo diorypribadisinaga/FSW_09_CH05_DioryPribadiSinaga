@@ -26,76 +26,49 @@ const diskStorage = multer.diskStorage({
 
 //EKSEKUSI
 app.get("/cars", async (req, res) => {
-    const mobil1 = await Cars.findAll();
-    const cars = []
-    const n = mobil1.length
-    for (let i = 0; i < n; i++) {
-        cars.push(mobil1[i].dataValues);
-    }
-    res.render("index", {
-        cars
-    });
+    Cars.findAll({
+        order: ["createdAt"]
+    }).then((cars) => {
+        res.render("index", {
+            cars
+        });
+    })
+
 });
 
 app.get("/cars/small", async (req, res) => {
-    const mobil1 = await Cars.findAll();
-    const cars = []
-    const n = mobil1.length
-    for (let i = 0; i < n; i++) {
-        if (mobil1[i].dataValues.size === "small") {
-            cars.push(mobil1[i].dataValues);
-        }
-    }
-    res.render("index", {
-        cars
-    });
+    Cars.findAll({
+        where: { size: "small" }
+    }).then((cars) => {
+        res.render('index', { cars })
+    })
 });
 
 app.get("/cars/small1", async (req, res) => {
-    const mobil1 = await Cars.findAll();
-    const car = []
-    const n = mobil1.length
-    for (let i = 0; i < n; i++) {
-        car.push(mobil1[i].dataValues);
-        if (mobil1[i].dataValues.size === "small") {
-            car.push(mobil1[i].dataValues);
-        }
-    }
-
-    res.render("index", {
-        car
-    });
+    Cars.findAll({
+        where: { size: "small" }
+    }).then((cars) => {
+        res.json(cars)
+    })
 });
 
 app.get("/cars/medium", async (req, res) => {
-    const mobil = await Cars.findAll();
-    const cars = []
-    const n = mobil.length
-    for (let i = 0; i < n; i++) {
-        if (mobil[i].dataValues.size === "medium") {
-            cars.push(mobil[i].dataValues);
-        }
-    }
-    res.render("index", {
-        cars
-    });
+    Cars.findAll({
+        where: { size: "medium" }
+    }).then((cars) => {
+        res.render('index', { cars })
+    })
 });
 app.get("/cars/large", async (req, res) => {
-    const mobil1 = await Cars.findAll();
-    const cars = []
-    const n = mobil1.length
-    for (let i = 0; i < n; i++) {
-        if (mobil1[i].dataValues.size === "large") {
-            cars.push(mobil1[i].dataValues);
-        }
-    }
-    res.render("index", {
-        cars
-    });
+    Cars.findAll({
+        where: { size: "large" }
+    }).then((cars) => {
+        res.render('index', { cars })
+    })
 });
 
 app.get("/cars/add", (req, res) => {
-    res.render("addcar");
+    res.render("addcar1");
 });
 app.post('/cars/add',
     multer({ storage: diskStorage }).single("photo"),
@@ -109,8 +82,6 @@ app.post('/cars/add',
             photo: req.file.filename
         })
             .then((car) => {
-                console.log(car.dataValues.photo);
-                console.log(car.dataValues.id);
                 let id_mobil = car.dataValues.id
                 Size.create({
                     id_mobil: id_mobil,
@@ -146,24 +117,19 @@ app.post('/cars/add1',
     })
 
 app.get("/", async (req, res) => {
-    const mobil = await Cars.findAll();
-    const n = mobil.length
-    for (let i = 0; i < n; i++) {
-        console.log(mobil[i].dataValues);
-    }
-    // console.log(Cars.findAll().length);
-    // console.log(mobil[1].length);
-    res.json(mobil)
+    Cars.findAll({
+
+    }).then((cars) => {
+        res.json(cars)
+    })
 })
 //UPDATE
-app.get('/cars/update/:id', (req, res) => {
-
+app.get('/cars/update/:id', async (req, res) => {
     Cars.findOne({
         where: { id: req.params.id }
     })
         .then(cars => {
-
-            res.render("update", { cars })
+            res.render("edit", { cars })
         })
 })
 
@@ -178,12 +144,6 @@ app.post('/cars/update/:id', multer({ storage: diskStorage }).single("photo"),
             where: { id: req.params.id }
         })
             .then(() => {
-                // Size.destroy({
-                //     where: {
-                //         id_mobil: req.params.id
-                //     }
-                // })
-
                 Size.update({
                     size: req.body.size
                 }, {
@@ -197,7 +157,6 @@ app.post('/cars/update/:id', multer({ storage: diskStorage }).single("photo"),
     })
 app.put('/cars/update1/:id', multer({ storage: diskStorage }).single("photo"),
     (req, res) => {
-        let array = []
         Cars.update({
             name: req.body.name,
             size: req.body.size,

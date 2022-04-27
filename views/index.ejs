@@ -9,7 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous" />
     <link rel="stylesheet" href="/css/style.css" />
-    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 </head>
@@ -101,17 +101,37 @@
                                     Updated At <%= car?.updatedAt %></small>
 
                                 <div class="btn-card mt-3 d-flex justify-content-between">
-                                    <a href="/cars/delete/<%= car?.id %>" class="btn btn-outline-danger"><i
+                                    <a data-bs-toggle="modal" data-bs-target="#exampleModal<%= car?.id %>"  class="btn btn-outline-danger"><i
                                             class="bi bi-trash3"></i>Delete</a>
                                     <a href="/cars/update/<%= car?.id %>" class="btn btn-success "><b
                                             class="bi bi-trash3"></b>Edit</a>
+                                        <div class="modal fade" id="exampleModal<%= car?.id %>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel<%= car?.id %>">Konfirmasi</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div style="margin-left: auto;margin-right: auto;" class="modal-body">
+                                                        <img height="260px" width="390px" src="/<%=car?.photo %>" alt="">
+                                                        <h3 style="margin-left: 35px;" class="mt-3">Anda Yakin Menghapus???</h3>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                    <a type="button" class="btn btn-outline-success" data-bs-dismiss="modal">cancel</a>
+                                                    <a onclick="Hapus()" href="/cars/delete/<%= car?.id %>" type="button" class="btn btn-outline-danger">Delete</a>
+                                                    </div>
+                                                </div>
+                                                </div>
+                                        </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 <% }) %>
             </div>
-
+            <!-- <button data-bs-target="#exampleModal1"
+            data-bs-toggle="modal" class="btn btn-outline-danger">Ok</button> -->
+            <!-- Button trigger modal -->
         </main>
         <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
                         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
@@ -122,6 +142,12 @@
                     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
                         integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
                         crossorigin="anonymous"></script> -->
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        <script>
+            function Hapus() {
+                swal("Good job!", "You clicked the button!", "success");
+            }
+        </script>
 </body>
 
 </html>
